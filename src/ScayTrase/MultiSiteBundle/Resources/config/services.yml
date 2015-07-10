@@ -1,0 +1,16 @@
+services:
+
+  site.fallback_factory:
+    class: ScayTrase\MultiSiteBundle\Service\DefaultFallbackFactory
+
+  site.manager:
+    class: ScayTrase\MultiSiteBundle\Service\SiteManagerService
+    arguments: [%maintenance_url%, @doctrine.orm.entity_manager, @site.fallback_factory]
+    tags:
+        - { name: kernel.event_listener, event: kernel.request, method: onRequest, priority: -254 }
+
+  site.filter_converter:
+    class:    ScayTrase\MultiSiteBundle\ParamConverter\SiteParamConverter
+    arguments: [@doctrine,@site.manager]
+    tags:
+    - { name: request.param_converter, priority: 2, converter: site_converter }

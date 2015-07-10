@@ -1,0 +1,22 @@
+{
+  "name": "scaytrase/symfony-multisite-bundle",
+  "description": "Bundle for splitting content depending on the host requested",
+  "minimum-stability": "stable",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Pavel Batanov",
+      "email": "pavel@batanov.me"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "": "src/"
+    }
+  },
+  "require": {
+    "symfony/framework-bundle": "~2.3",
+    "doctrine/orm": "~2.2,>=2.23",
+    "doctrine/doctrine-bundle": "~1.2"
+  }
+}
