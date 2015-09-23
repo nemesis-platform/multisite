@@ -5,12 +5,26 @@ services:
 
   site.manager:
     class: ScayTrase\MultiSiteBundle\Service\SiteManagerService
-    arguments: [%maintenance_url%, @doctrine.orm.entity_manager, @site.fallback_factory]
+    arguments: [%site.maintenance_urls%, site.provider.default, @site.fallback_factory]
     tags:
         - { name: kernel.event_listener, event: kernel.request, method: onRequest, priority: -254 }
 
   site.filter_converter:
     class:    ScayTrase\MultiSiteBundle\ParamConverter\SiteParamConverter
-    arguments: [@doctrine,@site.manager]
+    arguments: [@?doctrine, @site.manager]
     tags:
     - { name: request.param_converter, priority: 2, converter: site_converter }
+
+  site.provider.default:
+    class: ScayTrase\MultiSiteBundle\Providers\DoctrineProvider
+    parent: site.provider.doctrine
+    arguments:
+    - 'MultiSiteBundle:Site'
+    - url
+    - { active: true }
+
+  site.provider.doctrine:
+    class: ScayTrase\MultiSiteBundle\Providers\DoctrineProvider
+    abstract: true
+    arguments:
+    - @?doctrine.orm.entity_manager

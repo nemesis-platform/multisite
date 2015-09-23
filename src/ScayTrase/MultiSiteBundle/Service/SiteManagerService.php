@@ -8,9 +8,8 @@
 
 namespace ScayTrase\MultiSiteBundle\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use ScayTrase\MultiSiteBundle\Entity\Site;
+use ScayTrase\MultiSiteBundle\Providers\SiteProviderInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -18,22 +17,22 @@ class SiteManagerService implements SiteManagerInterface
 {
     /** @var null|Site */
     private $site;
-    /** @var EntityManagerInterface */
-    private $manager;
     /** @var  string */
     private $maintenanceUrl;
     /** @var  SiteFactoryInterface */
     private $fallbackFactory;
+    /** @var  SiteProviderInterface */
+    private $provider;
 
     /**
-     * @param                        $maintenanceUrl
-     * @param EntityManagerInterface $manager
-     * @param SiteFactoryInterface   $fallbackFactory
+     * @param $maintenanceUrl
+     * @param SiteProviderInterface $provider
+     * @param SiteFactoryInterface $fallbackFactory
      */
-    public function __construct($maintenanceUrl, EntityManagerInterface $manager, SiteFactoryInterface $fallbackFactory)
+    public function __construct($maintenanceUrl, SiteProviderInterface $provider, SiteFactoryInterface $fallbackFactory)
     {
         $this->maintenanceUrl  = $maintenanceUrl;
-        $this->manager         = $manager;
+        $this->provider        = $provider;
         $this->fallbackFactory = $fallbackFactory;
     }
 
@@ -45,9 +44,9 @@ class SiteManagerService implements SiteManagerInterface
         if (null === $this->site) {
             $this->site = $this->fallbackFactory->createSite(
                 array(
-                    'name'        => '',
+                    'name' => '',
                     'description' => 'Ошибка',
-                    'short_name'  => 'Ошибка',
+                    'short_name' => 'Ошибка',
                 )
             );
         }
@@ -65,6 +64,8 @@ class SiteManagerService implements SiteManagerInterface
 
     /**
      * @param GetResponseEvent $event
+     * @throws NotFoundHttpException
+     * @throws \UnexpectedValueException
      */
     public function onRequest(GetResponseEvent $event)
     {
@@ -82,16 +83,11 @@ class SiteManagerService implements SiteManagerInterface
 
     /**
      * @param string $host
+     * @throws NotFoundHttpException
      */
     protected function detectSite($host)
     {
-        $manager = $this->manager;
-        /** @var EntityRepository $siteRepo */
-        $siteRepo = $manager->getRepository('MultiSiteBundle:Site');
-
-        $site = $siteRepo->findOneBy(
-            array('url' => $host, 'active' => true)
-        );
+        $site = $this->provider->getSite($host);
 
         $urls = (array)$this->maintenanceUrl;
 
@@ -102,7 +98,7 @@ class SiteManagerService implements SiteManagerInterface
         }
 
         if (!$site) {
-            throw new NotFoundHttpException('Данный сайт не зарегистрирован');
+            throw new NotFoundHttpException('Site is not operated');
         }
 
         $this->site = $site;

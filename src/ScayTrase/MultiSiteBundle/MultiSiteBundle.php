@@ -8,9 +8,14 @@
 
 namespace ScayTrase\MultiSiteBundle;
 
+use ScayTrase\MultiSiteBundle\DependencyInjection\MultiSiteExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class MultiSiteBundle extends Bundle
 {
+    public function getContainerExtension()
+    {
+        return new MultiSiteExtension();
+    }
 
 }

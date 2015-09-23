@@ -20,6 +20,11 @@ class MultiSiteExtension extends Extension implements PrependExtensionInterface
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $container->setParameter('site.maintenance_urls', $config['maintenance_url']);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
@@ -46,4 +51,11 @@ class MultiSiteExtension extends Extension implements PrependExtensionInterface
             }
         }
     }
+
+    public function getAlias()
+    {
+        return 'site';
+    }
+
+
 }
