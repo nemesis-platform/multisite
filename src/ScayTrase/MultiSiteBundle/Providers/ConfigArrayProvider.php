@@ -14,11 +14,8 @@ use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-class ArrayProvider implements SiteProviderInterface
+class ConfigArrayProvider extends AbstractArrayProvider
 {
-    /** @var  Site[] */
-    private $sites;
-
     /**
      * ArrayProvider constructor.
      * @param array $config
@@ -42,13 +39,7 @@ class ArrayProvider implements SiteProviderInterface
     }
 
     /**
-     * @param array $siteData
-     * @return Site
-     *
-     * @throws \LogicException
-     * @throws AccessException
-     * @throws InvalidArgumentException
-     * @throws UnexpectedTypeException
+     * {@inheritdoc}
      */
     public function createFromArray(array $siteData)
     {
@@ -66,16 +57,5 @@ class ArrayProvider implements SiteProviderInterface
         return $site;
     }
 
-    /**
-     * @param string $hostname
-     * @return Site|null
-     */
-    public function getSite($hostname)
-    {
-        if (!array_key_exists($hostname, $this->sites)) {
-            return null;
-        }
 
-        return $this->sites[$hostname];
-    }
 }

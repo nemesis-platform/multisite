@@ -25,13 +25,15 @@ class SiteManagerService implements SiteManagerInterface
     private $provider;
 
     /**
-     * @param $maintenanceUrl
+     * @param $maintenanceUrls
      * @param SiteProviderInterface $provider
      * @param SiteFactoryInterface $fallbackFactory
      */
-    public function __construct($maintenanceUrl, SiteProviderInterface $provider, SiteFactoryInterface $fallbackFactory)
+    public function __construct($maintenanceUrls,
+                                SiteProviderInterface $provider,
+                                SiteFactoryInterface $fallbackFactory)
     {
-        $this->maintenanceUrl  = $maintenanceUrl;
+        $this->maintenanceUrl  = (array)$maintenanceUrls;
         $this->provider        = $provider;
         $this->fallbackFactory = $fallbackFactory;
     }

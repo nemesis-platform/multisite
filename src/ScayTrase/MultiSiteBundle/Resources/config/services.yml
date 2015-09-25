@@ -8,10 +8,10 @@ services:
     tags:
         - { name: kernel.event_listener, event: kernel.request, method: onRequest, priority: -254 }
 
-  site.provider.array:
-    class: ScayTrase\MultiSiteBundle\Providers\ArrayProvider
+  site.empty_array_provider:
+    class: ScayTrase\MultiSiteBundle\Providers\ConfigArrayProvider
     arguments:
     - []
 
-  site.default_provider: @site.provider.array
+  site.default_provider: @site.empty_array_provider
 

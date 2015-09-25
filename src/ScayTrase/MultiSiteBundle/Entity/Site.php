@@ -13,26 +13,19 @@ class Site
     /** @var  int|null */
     private $id;
     /** @var  string */
-    private $name;
+    private $name = '';
     /** @var  string */
-    private $short_name;
+    private $short_name = '';
     /** @var  string */
-    private $description;
+    private $description = '';
     /** @var  string */
     private $url;
     /** @var  string */
-    private $email;
+    private $email = '';
     /** @var bool */
     private $active = true;
     /** @var  string */
-    private $logo;
-
-    /**
-     * Site constructor.
-     */
-    public function __construct()
-    {
-    }
+    private $logo = '';
 
     /**
      * @return string

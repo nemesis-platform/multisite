@@ -10,14 +10,18 @@ ScayTrase\MultiSiteBundle\Entity\Site:
     fields:
       name:
         type: string
+        nullable: true
       short_name:
         type: string
+        nullable: true
       description:
         type: text
+        nullable: true
       url:
         type: string
       email:
         type: string
+        nullable: true
       active:
         type: boolean
       logo:

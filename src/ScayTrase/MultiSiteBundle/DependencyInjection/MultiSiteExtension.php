@@ -4,6 +4,7 @@ namespace ScayTrase\MultiSiteBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -29,12 +30,8 @@ class MultiSiteExtension extends Extension implements PrependExtensionInterface
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        var_dump($container->getExtensions());
-        foreach ($container->getExtensions() as $name => $extension) {
-
-            switch ($name) {
-                case 'doctrine': $loader->load('doctrine.yml'); break;
-            }
+        if ($container->hasExtension('doctrine')) {
+            $loader->load('doctrine.yml');
         }
 
         foreach ($config['provider'] as $name => $parameters) {
@@ -67,6 +64,14 @@ class MultiSiteExtension extends Extension implements PrependExtensionInterface
     private function addServiceProvider(ContainerBuilder $container, $name, array $parameters)
     {
         $container->setAlias('site.providers.' . $name, $parameters['id']);
+    }
+
+    private function addArrayProvider(ContainerBuilder $container, $name, array $parameters)
+    {
+        $container->setDefinition(
+            'site.providers.' . $name,
+            new Definition('ScayTrase\MultiSiteBundle\Providers\ConfigArrayProvider', array($parameters['sites']))
+        );
     }
 
     /**

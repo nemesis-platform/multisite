@@ -91,6 +91,7 @@ class Configuration implements ConfigurationInterface
 
         $sites = new ArrayNodeDefinition('sites');
         $sites->requiresAtLeastOneElement();
+        $sites->isRequired();
 
         /** @var ArrayNodeDefinition $sites_proto */
         $sites_proto = $sites->prototype('array');
