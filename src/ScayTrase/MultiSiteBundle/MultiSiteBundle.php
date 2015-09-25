@@ -8,7 +8,9 @@
 
 namespace ScayTrase\MultiSiteBundle;
 
+use ScayTrase\MultiSiteBundle\DependencyInjection\Compiler\DoctrineCompilerPass;
 use ScayTrase\MultiSiteBundle\DependencyInjection\MultiSiteExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class MultiSiteBundle extends Bundle
@@ -18,4 +20,9 @@ class MultiSiteBundle extends Bundle
         return new MultiSiteExtension();
     }
 
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+        $container->addCompilerPass(new DoctrineCompilerPass());
+    }
 }

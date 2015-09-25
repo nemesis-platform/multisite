@@ -29,11 +29,14 @@ class Configuration implements ConfigurationInterface
         $rootNode    = $treeBuilder->root('site');
 
         $providers = new ArrayNodeDefinition('provider');
-        $providers->isRequired()->requiresAtLeastOneElement();
         $providers
+            ->defaultValue(array('default' => array('type' => 'service', 'id' => 'site.default_provider')))
+            ->treatNullLike(array('default' => array('type' => 'service', 'id' => 'site.default_provider')))
             ->beforeNormalization()
             ->ifString()
-            ->then(function ($v) { return array('main' => array('type' => 'service', 'id' => $v)); })
+            ->then(function ($v) {
+                return array('default' => array('type' => 'service', 'id' => $v));
+            })
             ->end();
 
         /** @var ArrayNodeDefinition $proto */
@@ -63,7 +66,10 @@ class Configuration implements ConfigurationInterface
                         );
                     }
                     break;
+                default:
+                    throw new \InvalidArgumentException(sprintf('Invalid provider type %s', $arr['type']));
             }
+            return $arr;
         })->end();
 
         $provider_type = new ScalarNodeDefinition('type');
@@ -89,7 +95,6 @@ class Configuration implements ConfigurationInterface
         /** @var ArrayNodeDefinition $sites_proto */
         $sites_proto = $sites->prototype('array');
         $sites_proto
-//            ->useAttributeAsKey('url')
             ->children()
             ->scalarNode('name')->defaultValue('')->end()
             ->scalarNode('short_name')->defaultValue('')->end()
@@ -115,6 +120,11 @@ class Configuration implements ConfigurationInterface
 
 
         $rootNode->append($maintenanceUrl);
+
+        $selectedProvider = new ScalarNodeDefinition('selected_provider');
+        $selectedProvider->defaultValue('default');
+
+        $rootNode->append($selectedProvider);
 
         return $treeBuilder;
     }
