@@ -9,7 +9,7 @@ php:
   - hhvm
 
 env:
-  - SYMFONY_VERSION='2.3.*' deps='no'
+  - SYMFONY_VERSION='2.4.*' deps='no'
   - SYMFONY_VERSION='2.5.*' deps='no'
   - SYMFONY_VERSION='2.6.*' deps='no'
   - SYMFONY_VERSION='2.7.*@dev' deps='no'
@@ -23,7 +23,7 @@ matrix:
       - php: 7
         env: SYMFONY_VERSION='~2.8|~3.0@dev' deps='no'
       - php: 5.3
-        env: SYMFONY_VERSION='2.3.*' deps='low'
+        env: SYMFONY_VERSION='2.4.*' deps='low'
 
     allow_failures:
         - php: hhvm
